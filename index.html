@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Serial</title>
+    <script>
+        function atualizarTabela() {
+            // Faz a requisição para o arquivo "dados.csv"
+            fetch('dados.csv')
+                .then(response => response.text())
+                .then(data => {
+                    // Divide o conteúdo do CSV em linhas
+                    const linhas = data.trim().split('\n');
+                    
+                    // Remove o cabeçalho e separa as colunas
+                    const tabela = document.getElementById('tabela');
+                    tabela.innerHTML = ''; // Limpa o conteúdo da tabela
+                    
+                    // Adiciona cabeçalho da tabela
+                    const cabecalho = linhas[0].split(',');
+                    const trCabecalho = document.createElement('tr');
+                    cabecalho.forEach(coluna => {
+                        const th = document.createElement('th');
+                        th.textContent = coluna.trim();
+                        trCabecalho.appendChild(th);
+                    });
+                    tabela.appendChild(trCabecalho);
+
+                    // Adiciona as linhas do CSV na tabela
+                    for (let i = 1; i < linhas.length; i++) {
+                        const colunas = linhas[i].split(',');
+                        const tr = document.createElement('tr');
+                        colunas.forEach(valor => {
+                            const td = document.createElement('td');
+                            td.textContent = valor.trim();
+                            tr.appendChild(td);
+                        });
+                        tabela.appendChild(tr);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao ler o arquivo:', error);
+                });
+        }
+
+        // Atualiza a tabela a cada 1 segundo
+        setInterval(atualizarTabela, 1000);
+    </script>
+</head>
+<body>
+    <h1>Contador Serial em Tempo Real</h1>
+    <table border="1" id="tabela">
+        <!-- Tabela será preenchida dinamicamente -->
+    </table>
+</body>
+</html>
+
